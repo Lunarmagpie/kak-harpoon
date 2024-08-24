@@ -22,9 +22,15 @@ define-command harpoon-nav -params 1 -docstring "harpoon-nav <index>: navigate t
 
     eval set -- "$kak_quoted_opt_harpoon_files"
 
-		bufname=$(printf "$1" | awk -F '[:]' '{ print $1 }')
-		line=$(printf "$1" | awk -F '[:]' '{ print $2 }')
-		column=$(printf "$1" | awk -F '[:]' '{ print $3 }')
+
+		eval "bufline=\${$index}"
+
+
+		bufname=$(printf "$bufline" | awk -F '[:]' '{ print $1 }')
+		line=$(printf "$bufline" | awk -F '[:]' '{ print $2 }')
+		column=$(printf "$bufline" | awk -F '[:]' '{ print $3 }')
+
+		echo "echo -debug $line"
 
     if [ -n "$bufname" ]; then
       echo "edit '$bufname'"

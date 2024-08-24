@@ -26,7 +26,7 @@ Call `harpoon-add-bindings` to add the default keybindings:
 
 The harpoons list is an interactive buffer listing all of your current
 harpoons. You can freely edit or reorder this file, then call `write` to save
-it. The new order / contents will be set as your new harpoons. Press `<esc>` to
+it. The new order / contents will be set as your new harpoons. Press `<c-o>` to
 close the harpoons list.
 
 ## Customization
