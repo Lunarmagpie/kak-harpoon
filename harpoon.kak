@@ -6,15 +6,11 @@ define-command harpoon-add -docstring "harpoon-add: Add the current file to the 
     index=0
     while [ $# -gt 0 ]; do
       index=$(($index + 1))
-      if [ "$1" = "$kak_bufname" ]; then
-        echo "fail %{$kak_quoted_bufname is already harpooned at index $index}"
-        exit
-      fi
       shift
     done
     index=$(($index + 1))
     printf "%s\\n" "
-      set-option -add global harpoon_files $kak_quoted_bufname
+      set-option -add global harpoon_files $(echo $kak_quoted_bufname | xargs):$kak_cursor_line:$kak_cursor_column
       echo '$index: $kak_bufname:$kak_cursor_line:$kak_cursor_column'
     "
   }
@@ -23,10 +19,16 @@ define-command harpoon-add -docstring "harpoon-add: Add the current file to the 
 define-command harpoon-nav -params 1 -docstring "harpoon-nav <index>: navigate to the harpoon at <index>" %{
   evaluate-commands %sh{
     index=$1
+
     eval set -- "$kak_quoted_opt_harpoon_files"
-    eval "bufname=\${$index}"
+
+		bufname=$(printf "$1" | awk -F '[:]' '{ print $1 }')
+		line=$(printf "$1" | awk -F '[:]' '{ print $2 }')
+		column=$(printf "$1" | awk -F '[:]' '{ print $3 }')
+
     if [ -n "$bufname" ]; then
       echo "edit '$bufname'"
+      echo "select $line.$column,$line.$column"
       echo "echo '$index: $bufname'"
     else
       echo "fail 'No harpoon at index $index'"
@@ -78,7 +80,7 @@ define-command harpoon-add-bindings -docstring "Add convenient keybindings for n
 
 hook global BufCreate \*harpoon\* %{
   map buffer normal <ret> ':harpoon-nav %val{cursor_line}<ret>'
-  map buffer normal <esc> ':delete-buffer *harpoon*<ret>'
+  map buffer normal <c-o> ':delete-buffer *harpoon*<ret>'
   alias buffer write harpoon-update-from-list
   alias buffer w harpoon-update-from-list
   add-highlighter buffer/harpoon-indices regex ^\d: 0:function
