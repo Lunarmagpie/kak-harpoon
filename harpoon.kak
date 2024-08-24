@@ -15,7 +15,7 @@ define-command harpoon-add -docstring "harpoon-add: Add the current file to the 
     index=$(($index + 1))
     printf "%s\\n" "
       set-option -add global harpoon_files $kak_quoted_bufname
-      echo '$index: $kak_bufname'
+      echo '$index: $kak_bufname:$kak_cursor_line:$kak_cursor_column'
     "
   }
 }
