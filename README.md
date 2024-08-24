@@ -1,3 +1,5 @@
+Fork of Raiguard's Kak Harpoon with support to save buffer locations how I want it.
+
 # kak-harpoon
 
 Quickly save and switch between your most important Kakoune files. Harpoons are
