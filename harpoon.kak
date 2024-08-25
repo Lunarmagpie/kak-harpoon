@@ -6,8 +6,12 @@ define-command harpoon-add -docstring "harpoon-add: Add the current file to the 
     index=0
     while [ $# -gt 0 ]; do
       index=$(($index + 1))
+      if [ "$1" = "$kak_bufname:$kak_cursor_line:$kak_cursor_column" ]; then
+        echo "fail %{$kak_quoted_bufname:$kak_cursor_line:$kak_cursor_column is already harpooned at index $index}"
+        exit
+      fi
       shift
-    done
+    done 
     index=$(($index + 1))
     printf "%s\\n" "
       set-option -add global harpoon_files $(echo $kak_quoted_bufname | xargs):$kak_cursor_line:$kak_cursor_column
